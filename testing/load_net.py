@@ -1,7 +1,18 @@
 import _init_paths
 from fast_rcnn.config import cfg
-import argparse
+from fast_rcnn.test import im_detect
+from fast_rcnn.nms_wrapper import nms
+import argparse, os
 import caffe
+CLASSES = ('__background__',
+            'aeroplane', 'bicycle', 'bird', 'boat',
+            'bottle', 'bus', 'car', 'cat', 'chair',
+            'cow', 'diningtable', 'dog', 'horse',
+            'motorbike', 'person', 'pottedplant',
+            'sheep', 'sofa', 'train', 'tvmonitor')
+
+NETS = {'vgg16': ('VGG16', 'VGG16_faster_rcnn_final.caffemodel'),
+        'zf': ('ZF', 'ZF_faster_rcnn_final.caffemodel')}
 
 def parse_args():
     """Parse input arguments."""
