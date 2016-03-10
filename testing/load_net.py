@@ -1,0 +1,43 @@
+import _init_paths
+from fast_rcnn.config import cfg
+import argparse
+import caffe
+
+def parse_args():
+    """Parse input arguments."""
+    parser = argparse.ArgumentParser(description='Faster R-CNN demo')
+    parser.add_argument('--gpu', dest='gpu_id', help='GPU device id to use [0]',
+                        default=0, type=int)
+    parser.add_argument('--cpu', dest='cpu_mode',
+                        help='Use CPU mode (overrides --gpu)',
+                        action='store_true')
+    parser.add_argument('--net', dest='demo_net', help='Network to use [vgg16]',
+                        choices=NETS.keys(), default='vgg16')
+
+    args = parser.parse_args()
+
+    return args
+
+if __name__ == '__main__':
+    cfg.TEST.HAS_RPN = True  # Use RPN for proposals
+
+    args = parse_args()
+
+    prototxt = os.path.join(cfg.ROOT_DIR, 'models', NETS[args.demo_net][0],
+                            'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
+    caffemodel = os.path.join(cfg.ROOT_DIR, 'data', 'faster_rcnn_models',
+                              NETS[args.demo_net][1])
+
+    if not os.path.isfile(caffemodel):
+        raise IOError(('{:s} not found.\nDid you run ./data/script/'
+                       'fetch_faster_rcnn_models.sh?').format(caffemodel))
+
+    if args.cpu_mode:
+        caffe.set_mode_cpu()
+    else:
+        caffe.set_mode_gpu()
+        caffe.set_device(args.gpu_id)
+        cfg.GPU_ID = args.gpu_id
+    net = caffe.Net(prototxt, caffemodel, caffe.TEST)
+
+    print '\n\nLoaded network {:s}'.format(caffemodel)
