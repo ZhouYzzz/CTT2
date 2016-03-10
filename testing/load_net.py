@@ -34,8 +34,9 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    prototxt = os.path.join(cfg.ROOT_DIR, 'models', NETS[args.demo_net][0],
-                            'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
+    # < testing >
+    # load net with half pt file and whole model file
+    prototxt = 'load_data/first_half.pt'
     caffemodel = os.path.join(cfg.ROOT_DIR, 'data', 'faster_rcnn_models',
                               NETS[args.demo_net][1])
 
