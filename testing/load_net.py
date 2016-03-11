@@ -4,6 +4,7 @@ from fast_rcnn.test import im_detect
 from fast_rcnn.nms_wrapper import nms
 import argparse, os
 import caffe
+
 CLASSES = ('__background__',
             'aeroplane', 'bicycle', 'bird', 'boat',
             'bottle', 'bus', 'car', 'cat', 'chair',
@@ -29,27 +30,29 @@ def parse_args():
 
     return args
 
-if __name__ == '__main__':
+def load_net(pt):
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals
 
-    args = parse_args()
-
-    # < testing >
-    # load net with half pt file and whole model file
-    prototxt = 'load_data/first_half.pt'
     caffemodel = os.path.join(cfg.ROOT_DIR, 'data', 'faster_rcnn_models',
                               NETS[args.demo_net][1])
+
+    if not os.path.isfile(pt):
+        raise IOError('prototxt file not found.')
 
     if not os.path.isfile(caffemodel):
         raise IOError(('{:s} not found.\nDid you run ./data/script/'
                        'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
-    if args.cpu_mode:
-        caffe.set_mode_cpu()
-    else:
-        caffe.set_mode_gpu()
-        caffe.set_device(args.gpu_id)
-        cfg.GPU_ID = args.gpu_id
-    net = caffe.Net(prototxt, caffemodel, caffe.TEST)
+    caffe.set_mode_gpu()
+    caffe.set_device(0)
+    cfg.GPU_ID = 0
+    net = caffe.Net(pt, caffemodel, caffe.TEST)
+    
+    return net, cfg
+
+if __name__ == '__main__':
+    this_file_path = os.path.dirname(__file__)
+
+    net, cfg = load_net(this_file_path + '/load_net/first_half.pt')
 
     print '\n\nLoaded network {:s}'.format(caffemodel)
