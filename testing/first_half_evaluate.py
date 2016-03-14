@@ -1,6 +1,21 @@
-from load_net import load_net
-import os
+import _init_paths
+from _net_info import *
+import caffe, cv2
+from fast_rcnn.config import cfg
+from fast_rcnn.test import _get_blobs
+import numpy as np
+from time import time
 
-this_file_path = os.path.dirname(__file__)
+im = caffe.io.load_image('../py-faster-rcnn/data/demo/001150.jpg')
+im = caffe.io.resize(im, (224, 224))
+im = np.expand_dims(im, 0)
+im = im.transpose((0,3,1,2))
 
-net, cfg = load_net(this_file_path + '/load_net/first_half.pt')
+caffe.set_mode_gpu()
+caffe.set_device(0)
+
+net = caffe.Net(ptfile_second_half,model_vgg16,caffe.TEST)
+
+t = time()
+net.forward(data=im, im_info=np.array([[224,224,1]]))
+print time() - t
