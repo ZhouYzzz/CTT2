@@ -1,6 +1,6 @@
 import os.path as osp
 
-_tfp = osp.dirname(__name__)
+_tfp = osp.dirname(__file__)
 
 # faster_rcnn_test.pt  first_half.pt  second_half.pt
 
