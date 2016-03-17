@@ -1,8 +1,6 @@
 import _init_paths
-from _net_info import *
+# from net.net_second_half import net_second_half as net2
 import caffe, cv2
-from fast_rcnn.config import cfg
-from fast_rcnn.test import _get_blobs
 import numpy as np
 from time import time
 
@@ -14,9 +12,9 @@ im = im.transpose((0,3,1,2))
 caffe.set_mode_gpu()
 caffe.set_device(0)
 
-net = caffe.Net(ptfile_first_half,model_vgg16,caffe.TEST)
+from net.net_first_half import net_first_half
 
 t = time()
-blobs_out = net.forward(data=im, im_info=np.array([[224,224,1]]))
-np.save('conv5_3', blobs_out['conv5_3'])
+blobs_out = net_first_half.forward(data=im)
+# np.save('conv5_3', blobs_out['conv5_3'])
 print time() - t
