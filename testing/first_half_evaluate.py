@@ -16,5 +16,7 @@ from net.net_first_half import net_first_half
 
 t = time()
 blobs_out = net_first_half.forward(data=im)
+blobs = net_first_half.blobs
 np.save('conv5_3', blobs_out['conv5_3'])
+np.save('conv1_2', blobs['conv1_2'].data)
 print time() - t
