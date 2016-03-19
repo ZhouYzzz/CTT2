@@ -20,7 +20,7 @@ import cv2
 t = time()
 # r = imresize(i, (28,28), mode='F')
 # for x in xrange(10):
-r = cv2.resize(i,(448,448))
+r = cv2.resize(i,(224,224))
 
 sum = np.sum(r,axis=2)
 
