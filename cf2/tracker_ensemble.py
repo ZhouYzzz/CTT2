@@ -1,6 +1,6 @@
 import _init_path
 import numpy as np
-# import caffe
+import caffe
 
 ''' VGG16:
 
@@ -35,21 +35,27 @@ def tmp_imread(img):
 
 def tracker_ensemble():
     '''Run Tracker'''
-    global net
+
     # ========================================
     # Environment setting
     # ========================================
+
+    # import net
+    caffe.set_mode_gpu()
+    caffe.set_device(2)
+
+    from testing.net.net_conv import net_conv as net
 
     # read vedio sequence
     from utility.read_sequence import read_sequence
     groundtruth, frame_iter = read_sequence('benchmark','MotorRolling')
 
-    layers = ['conv2_1', 'conv5_3']
+    layers = ['pool1']
 
     # ========================================
     # Start tracking
     # ========================================
-    for frame in frame_iter:
+    for frame in frame_iter[:0]:
         # read frame
         # im = caffe.io.imread(frame)
         im = tmp_imread(frame)
@@ -58,6 +64,8 @@ def tracker_ensemble():
 
         # do forward
         blobs_out = net.forward(blobs=layers, data=im)
+
+        print blobs_out.keys()
 
 
 
