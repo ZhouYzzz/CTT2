@@ -20,3 +20,8 @@ net.blobs['data'].reshape(*im.shape)
 t = time()
 blobs_out = net.forward(data=im)
 print time() - t
+
+for (layer,blob) in net.blobs.iteritems():
+    print layer, blob.data.shape
+
+
