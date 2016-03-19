@@ -1,0 +1,8 @@
+Sat Mar 19 15:41:33 CST 2016
+==========
+Net Loaded
+==========
+---- Frame: /home/zhouyz14/zhouyz/proj-cloud-terminal-tracking/CTT2/cf2/../utility/../benchmark/MotorRolling/img/0001.jpg
+time: Image preprocess took 0.0223541259766
+time: Net Forward took 0.0252270698547
+['pool1', 'conv5_3']

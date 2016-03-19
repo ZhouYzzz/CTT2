@@ -1,7 +1,7 @@
 import _init_path
 import numpy as np
 import caffe
-
+import cv2
 ''' VGG16:
 
 data    (1, 3, 224, 224)
@@ -45,25 +45,47 @@ def tracker_ensemble():
     caffe.set_device(2)
 
     from testing.net.net_conv import net_conv as net
+    print '=========='
+    print 'Net Loaded'
+    print '=========='
 
     # read vedio sequence
     from utility.read_sequence import read_sequence
     groundtruth, frame_iter = read_sequence('benchmark','MotorRolling')
 
-    layers = ['pool1']
+    layers = ['pool1', 'conv5_3']
 
     # ========================================
     # Start tracking
     # ========================================
-    for frame in frame_iter[:0]:
-        # read frame
-        # im = caffe.io.imread(frame)
-        im = tmp_imread(frame)
+    from time import time
 
-        im = reshape(im)
+    RESIZE = True
+
+    for frame in frame_iter[:1]:
+        print '---- Frame:', frame
+        tag_img_process = time()
+
+        # read frame
+        im = cv2.imread(frame)
+        # im = tmp_imread(frame)
+        if RESIZE:
+            im = caffe.io.resize(im, (224,224))
+
+        im = np.expand_dims(im, 0)
+        # im = caffe.io.resize(im, (224,224))
+        im = im.transpose((0,3,1,2))
+
+        if not RESIZE:
+            net.blobs['data'].reshape(*im.shape)
+
+        print 'time: Image preprocess took', time() - tag_img_process
+        tag_forward = time()
 
         # do forward
         blobs_out = net.forward(blobs=layers, data=im)
+
+        print 'time: Net Forward took', time() - tag_forward
 
         print blobs_out.keys()
 
