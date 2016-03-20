@@ -51,9 +51,9 @@ def tracker_ensemble():
 
     # read vedio sequence
     from utility.read_sequence import read_sequence
-    groundtruth, frame_iter = read_sequence('benchmark','MotorRolling')
+    groundtruth, frame_iter, img_shape = read_sequence('benchmark','MotorRolling')
 
-    layers = ['pool1','pool2','pool3','pool4','conv5_3']
+    layers = ['data','pool1','pool2','pool3','pool4','conv5_3']
 
     # ========================================
     # Start tracking
@@ -70,7 +70,7 @@ def tracker_ensemble():
         im = cv2.imread(frame)
         # im = tmp_imread(frame)
         if RESIZE:
-            im = caffe.io.resize(im, (224,224))
+            im = cv2.resize(im, (224,224))
 
         im = np.expand_dims(im, 0)
         # im = caffe.io.resize(im, (224,224))
@@ -84,6 +84,7 @@ def tracker_ensemble():
 
         # do forward
         blobs_out = net.forward(blobs=layers, data=im)
+        print blobs_out.keys()
 
         print 'time: Net Forward took', time() - tag_forward
 

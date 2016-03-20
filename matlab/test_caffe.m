@@ -1,4 +1,4 @@
-CAFFE_PATH = '~/caffe/matlab/';
+CAFFE_PATH = '~/py-faster-rcnn/caffe-fast-rcnn/matlab/';
 addpath(CAFFE_PATH);
 
 CTT2_ROOT = '~/proj/CTT2/';
@@ -13,5 +13,3 @@ caffe.set_mode_gpu();
 caffe.set_device(0);
 
 net = caffe.Net(ptfile, model, 'test');
-
-net
